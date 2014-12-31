@@ -1,10 +1,8 @@
 module.exports = function (app, express) {
   var router = express.Router();
 
-  router.route('/users').get(function(req, res) {
-    res.send('hello :)');
-  }).post(function(req, res) {
-    res.send('hello post :)');
+  router.route('/users').post(function(req, res) {
+    // handle new user here
   });
 
   app.use('/', router);
