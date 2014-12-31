@@ -1,0 +1,10 @@
+var express = require('express');
+var app = express();
+
+require('./routes/users')(app, express);
+
+app.get('/', function(request, response){
+    response.sendFile('/home/mohamedwagdy/Cirkle/service/www/testUserPost.html');
+});
+
+app.listen('8000');
