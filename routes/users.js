@@ -1,20 +1,26 @@
 module.exports = function (app, express, client) {
+
   var router = express.Router();
+  var bodyParser = require('body-parser');
+
+  router.use(bodyParser.json());
+  router.use(bodyParser.urlencoded({extended: true}));
 
   router.route('/users').post(function(req, res) {
 
-    var email = req.query.email;
-    var password = req.query.password;
-    var displayname = req.query.displayname;
+    var email = req.body.email;
+    var password = req.body.password;
+    var displayname = req.body.displayname;
     var query = 'insert into user_(email, password, displayname) values ($1, $2, $3)';
 
-    console.log(query);
+    console.log(query + '. Parameters: email='+ email + ', password='+ password + ', displayname='+ displayname);
 
     client.query(query, [email, password, displayname], function(err, result) {
       if(err) {
-        return response.send(err);
+        console.log("Error: " + err);
+        return res.send(err);
       }
-      response.send('OK');
+      res.send('OK');
     });
   });
 
