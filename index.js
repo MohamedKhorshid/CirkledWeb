@@ -4,9 +4,6 @@ var database = require('./config/database');
 var server = require('./config/server');
 var pg = require('pg');
 
-// load routes
-require('./routes/users')(app, express);
-
 // validate configuration 
 if(!database.url) {
   console.error('Invalid database url');
@@ -22,6 +19,9 @@ var client = new pg.Client(connString);
 client.connect(function() {
   console.log('Connected to database: ' + connString);
 });
+
+// load routes
+require('./routes/users')(app, express, client);
 
 // start server
 app.listen(serverPort, function() {

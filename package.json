@@ -7,15 +7,20 @@
     "start": "nodejs index.js"
   },
   "dependencies": {
-    "express": "~4.9.x",
-    "pg": "*"
+    "pg": "4.x",
+    "express": "~4.9.x"
   },
-  "repository" : {
-    "Cirkle" : "https://github.com/MohamedKhorshid/Cirkle/"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MohamedKhorshid/Cirkle/"
   },
-  "engines" : {
-    "node" : "0.12"
+  "engines": {
+    "node": "0.12"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {},
+  "keywords": [
+    "cirkle"
+  ],
+  "author": "Mohamed Wagdy"
 }
-
