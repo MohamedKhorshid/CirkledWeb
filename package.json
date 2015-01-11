@@ -7,6 +7,7 @@
     "start": "nodejs index.js"
   },
   "dependencies": {
+    "node-validator": "*",
     "body-parser": "*",
     "pg": "4.x",
     "express": "~4.9.x"
