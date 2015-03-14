@@ -17,17 +17,15 @@ module.exports = function (app, express, client) {
     var userObj = {};
     userObj.email = email;
     userObj.password = password;
-    userObj.displayname = displayname;
 
     // validate parameters
     var check = validator.isObject()
       .withRequired('email', cirkleValidator.isEmail())
-      .withRequired('password')
-      .withOptional('displayname');
+      .withRequired('password');
 
     var valid = validator.run(check, userObj, function(errorCount, errors){
-      console.log('errorCount :' + errorCount);
       errors.forEach(function(error){
+        console.log('errorCount :' + errorCount);
         console.log('error :' + error);
         console.log('message :' + error.message);
         console.log('parameter :' + error.parameter);
@@ -35,8 +33,9 @@ module.exports = function (app, express, client) {
       });
 
       res.status(400);
-      res.send(errors);
+      res.send("{message:'invalid.request'}");
     });
+
 
     if(valid) {
       var query = 'insert into user_(email, password, displayname) values ($1, $2, $3)';

@@ -9,7 +9,8 @@
   "dependencies": {
     "body-parser": "*",
     "pg": "4.x",
-    "express": "~4.9.x"
+    "express": "~4.9.x",
+    "moment": "~2.4.0"
   },
   "repository": {
     "type": "git",
