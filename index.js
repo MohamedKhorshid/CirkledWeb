@@ -1,29 +1,29 @@
 var express = require('express');
 var app = express();
-var database = require('./config/database');
+
+var router = express.Router();
+var bodyParser = require('body-parser');
+
 var server = require('./config/server');
-var pg = require('pg');
+var auth = require('./lib/auth');
+var db = require('./lib/db');
 
-// validate configuration 
-if(!database.url) {
-  console.error('Invalid database url');
-  return;
-}
-
-// set env parameters
-var connString = database.url;
 var serverPort = server.port || 8000;
 
-// open connection to db
-var client = new pg.Client(connString);
-client.connect(function() {
-  console.log('Connected to database: ' + connString);
-});
+// load routes
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({extended: true}));
+
+// authentication middleware
+app.use(auth);
+app.use('/', router);
 
 // load routes
-require('./routes/users')(app, express, client);
+require('./routes/users')(router);
+require('./routes/cirkle')(router);
 
 // start server
 app.listen(serverPort, function() {
   console.log('app started on port ' + serverPort);
+	db.createConnection();
 });

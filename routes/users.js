@@ -1,17 +1,22 @@
-module.exports = function (app, express, client) {
-
-  var router = express.Router();
-  var bodyParser = require('body-parser');
+module.exports = function (router) {
   var validator = require('../lib/node-validator');
   var cirkleValidator = require('../lib/cirkle-validator');
   var async = require('async');
+  var client = require('../lib/db').client;
 
-  router.use(bodyParser.json());
-  router.use(bodyParser.urlencoded({extended: true}));
+	router.route('/public/login').get(function(req, res) {
+		client.query('select * from user_ where email = $1', [req.query.email], function(err, result) {
+				if(result.rowCount > 0) {
+					res.status(200);
+					res.send(result.rows[0]);
+				} else {
+					res.status(400).end();
+				}
+		});
+		
+	});
 
-router.route('/users').get(function(req, res) {});
-
-	router.route('/users').post(function(req, res) {
+	router.route('/public/register').post(function(req, res) {
 		var email = req.body.email;
     var password = req.body.password;
     var displayname = req.body.displayname;
@@ -73,6 +78,4 @@ router.route('/users').get(function(req, res) {});
 		});
 
 	});
-
-  app.use('/', router);
 }
