@@ -4,7 +4,7 @@ module.exports = function (router) {
   var async = require('async');
   var client = require('../lib/db').client;
 
-	router.route('/public/login').get(function(req, res) {
+	router.route('/public/login').post(function(req, res) {
 		client.query('select * from user_ where email = $1', [req.query.email], function(err, result) {
 				if(result.rowCount > 0) {
 					res.status(200);
@@ -17,6 +17,7 @@ module.exports = function (router) {
 	});
 
 	router.route('/public/register').post(function(req, res) {
+
 		var email = req.body.email;
     var password = req.body.password;
     var displayname = req.body.displayname;
