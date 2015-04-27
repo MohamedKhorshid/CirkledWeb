@@ -21,6 +21,7 @@ app.use('/', router);
 // load routes
 require('./routes/users')(router);
 require('./routes/cirkle')(router);
+require('./routes/search')(router);
 
 // start server
 app.listen(serverPort, function() {
