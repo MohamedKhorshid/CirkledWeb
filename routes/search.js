@@ -7,29 +7,27 @@ module.exports = function (router) {
 	router.route('/search/users').get(function(req, res) {
 		var validateRequest = function(callback) {
 
-	    var obj = {};
-		  obj.searchText = req.query.searchText;
+			var obj = {};
+			  obj.searchText = req.query.searchText;
 
-			var check = validator.isObject().withRequired('searchText');
+				var check = validator.isObject().withRequired('searchText');
 
-			validator.run(check, obj, function(errorCount, errors) {
-				if(errorCount > 0) {
-					callback({status: 400, body: {message:'INVALID_REQUEST'}});
-				} else {
-					callback(null, obj.searchText);
-				}
-    	});
+				validator.run(check, obj, function(errorCount, errors) {
+					if(errorCount > 0) {
+						callback({status: 400, body: {message:'INVALID_REQUEST'}});
+					} else {
+						callback(null, obj.searchText);
+					}
+			});
 		};
 
 		var searchUser = function(searchText, callback) {
-			var userSearch = '%' + searchText + '%';
-			client.query('select * from user_ where displayname like $1 or email like $1', [userSearch], function(err, result) {
-				if(err) {
-	        console.log("Error while fetching cirkles: " + err);
-	        callback({status: 500, body: {}});
-	      } else {
-	        callback(null, JSON.stringify(result.rows));
-	      }
+			var userSearch = eval('/' + searchText + '/');
+			
+			var userscollection = req.db.get('users');
+			
+			userscollection.find({'displayname' : userSearch},{},function(e,docs){
+				callback(null, JSON.stringify(docs));
 			});
 		};
 
