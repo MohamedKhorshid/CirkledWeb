@@ -1,29 +1,28 @@
 {
-  "name": "cirkle-nodejs",
-  "version": "0.1.2",
-  "description": "The service tier for Cirkle",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodejs index.js"
-  },
-  "dependencies": {
-    "body-parser": "*",
-    "pg": "4.x",
-    "express": "~4.9.x",
-    "moment": "~2.4.0",
-		"async": "*"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MohamedKhorshid/Cirkle/"
-  },
-  "engines": {
-    "node": "0.12"
-  },
-  "license": "MIT",
-  "devDependencies": {},
-  "keywords": [
-    "cirkle"
-  ],
-  "author": "Mohamed Wagdy"
+	"name": "cirkle-nodejs",
+	"version": "0.0.1",
+	"description": "Cirkle backend",
+	"main": "index.js",
+	"scripts": {
+		"start": "node app.js"
+	},
+	"dependencies": {
+		"body-parser": "*",
+		"pg": "4.x",
+		"express": "~4.9.x",
+		"moment": "~2.4.0",
+		"async": "*",
+		"mongodb": "1.4.4",
+		"monk": "~1.0.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MohamedKhorshid/Cirkle/"
+	},
+	"license": "MIT",
+	"devDependencies": {},
+	"keywords": [
+		"cirkle"
+	],
+	"author": "Mohamed Wagdy"
 }

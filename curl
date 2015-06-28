@@ -1,1 +1,0 @@
-curl -i http://localhost:8000/users -d 'email=5&password=2&displayname=3'
