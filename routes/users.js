@@ -4,13 +4,21 @@ module.exports = function (router) {
 	var async = require('async');
 	
 	router.route('/public/login').post(function(req, res) {
-		client.query('select * from user_ where email = $1', [req.query.email], function(err, result) {
-				if(result.rowCount > 0) {
-					res.status(200);
-					res.send(result.rows[0]);
-				} else {
-					res.status(400).end();
-				}
+		
+		var email = req.body.email;
+		var password = req.body.password;
+
+		console.log(email + '-' + password)
+		
+		var userscollection = req.db.get('users');
+			
+		userscollection.find({'email' : email, 'password' : password},{},function(e,docs){
+			if(docs.length > 0) {
+				res.status(200);
+				res.end();
+			} else {
+				res.status(400).end();
+			}
 		});
 		
 	});
@@ -46,7 +54,6 @@ module.exports = function (router) {
 			var userscollection = req.db.get('users');
 			
 			userscollection.find({'email' : email},{},function(e,docs){
-				console.log('docs > ' + docs);
 				if(docs.length > 0) {
 					callback({status: 400, body: {message: 'USER_EXISTS'}});
 				} else {
