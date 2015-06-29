@@ -3,7 +3,7 @@ module.exports = function (router) {
 	var validator = require('../lib/node-validator');
 	var async = require('async');
 
-	router.route('/cirkle').get(function(req, res) {
+	router.route('/cirkles/:cirkleId').get(function(req, res) {
 		/*client.query('select * from cirkle where cirkleid = $1', [req.query.cirkleId], function(err, result) {
 				if(result.rowCount > 0) {
 					res.status(200);
@@ -15,6 +15,20 @@ module.exports = function (router) {
 
 		res.status(200);
 		res.send({});
+
+	});
+	
+	router.route('/cirkles/:cirkleId').delete(function(req, res) {
+		
+		var cirklescollection = req.db.get('cirkles');
+		cirklescollection.remove({'_id' : req.params.cirkleId}, {}, function(e, numberOfRemovedDocs){
+			if(numberOfRemovedDocs > 0) {
+				res.status(200);
+			} else {
+				res.status(404);
+			}
+			res.end();
+		});
 
 	});
 
