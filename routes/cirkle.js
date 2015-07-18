@@ -4,17 +4,19 @@ module.exports = function (router) {
 	var async = require('async');
 
 	router.route('/cirkles/:cirkleId').get(function(req, res) {
-		/*client.query('select * from cirkle where cirkleid = $1', [req.query.cirkleId], function(err, result) {
-				if(result.rowCount > 0) {
-					res.status(200);
-					res.send(result.rows[0]);
-				} else {
-					res.status(400).end();
-				}
-		});*/
-
-		res.status(200);
-		res.send({});
+		var cirklescollection = req.db.get('cirkles');
+			
+		cirklescollection.find({'cirkleId' : req.query.cirkleId}, {}, function(e,docs){
+			if(e) {
+				res.status(500).end();
+			} else if (docs.length == 0) {
+				res.status(404).end();
+			} else {
+				res.status(200);
+				res.send(JSON.stringify(docs[0]));
+			}
+			
+		});
 
 	});
 	
