@@ -68,23 +68,49 @@ module.exports = function (router) {
 		cirkleObj.admin = req.user._id;
 		var membersArr = eval(req.body.members);
 
-		console.log('received cirkle ' + cirkleObj.name + 'with members :' + membersArr);
+		console.log('received cirkle ' + cirkleObj.name + ' with members :' + membersArr);
 
 		cirkleObj.members = [];
 		
-		// convert to objectId format
-		for(var i in membersArr) {
-			console.log(membersArr[i]);
-			cirkleObj.members.push({'$oid': membersArr[i]});
-		}
+		var tasks = [];
+
+		var userscollection = req.db.get('users');
+		var x = 0;
+
+		var fetchMembers = function(callback) {
+
+			if(x >= membersArr.length) {
+				callback(null);
+				return;
+			}
+
+			var memberId = membersArr[x];
+			userscollection.find({'_id' : memberId}, {}, function(e,docs){
+				console.log('fetch member ' + memberId + ' results: ' + JSON.stringify(docs));
+				if(e) {
+					callback({status: 500});
+				} else if (docs.length == 0) {
+					callback({status: 404});
+				} else if (docs.length > 1) {
+					res.status(400).end();
+					callback({status: 400, body: {message:'INVALID_REQUEST'}});
+				} else {
+					member = docs[0];
+					cirkleObj.members.push(member._id);
+					x++;
+					fetchMembers(callback);
+
+				}
+				
+			});
+		};
 
 		var validateCirkle = function(callback) {
 			console.log('validate parameters...');
 
-			var memberValidator = validator.isObject().withRequired('$oid');
 			var check = validator.isObject().withRequired('name')
 			.withRequired('admin')
-			.withOptional('members', validator.isArray(memberValidator));
+			.withOptional('members', validator.isArray());
 
 			validator.run(check, cirkleObj, function(errorCount, errors) {
 				if(errorCount > 0) {
@@ -117,7 +143,11 @@ module.exports = function (router) {
 			}
 		};
 
-		async.waterfall([validateCirkle, postCirkle], handleError);
+		tasks.push(fetchMembers);
+		tasks.push(validateCirkle);
+		tasks.push(postCirkle);
+		
+		async.waterfall(tasks, handleError);
 	});
 
 }
