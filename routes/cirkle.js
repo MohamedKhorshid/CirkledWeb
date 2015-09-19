@@ -41,6 +41,7 @@ module.exports = function (router) {
 			var cirklescollection = req.db.get('cirkles');
 			
 			cirklescollection.find({'admin' : req.user._id}, {}, function(e,docs){
+				console.log('found cirkles' + JSON.stringify(docs));
 				callback(null, JSON.stringify(docs));
 			});
 		};
@@ -65,14 +66,17 @@ module.exports = function (router) {
 		var cirkleObj = {};
 		cirkleObj.name = req.body.cirkleName;
 		cirkleObj.admin = req.user._id;
-		var membersArr = req.body.members;
+		var membersArr = eval(req.body.members);
+
+		console.log('received cirkle ' + cirkleObj.name + 'with members :' + membersArr);
 
 		cirkleObj.members = [];
 		
+		// convert to objectId format
 		for(var i in membersArr) {
+			console.log(membersArr[i]);
 			cirkleObj.members.push({'$oid': membersArr[i]});
 		}
-		
 
 		var validateCirkle = function(callback) {
 			console.log('validate parameters...');
@@ -84,20 +88,21 @@ module.exports = function (router) {
 
 			validator.run(check, cirkleObj, function(errorCount, errors) {
 				if(errorCount > 0) {
+					console.log('invalid cirkle ' + errors);
 					callback({status: 400, body: {message:'INVALID_REQUEST'}});
 				} else {
+					console.log('valid cirkle');
 					callback(null);
 				}
 			});
 		};
 
 		var postCirkle = function(callback) {
-			console.log('persisting cirkle ' + cirkleObj.name);
+			console.log('persisting cirkle ' + JSON.stringify(cirkleObj));
 			
 			var cirklescollection = req.db.get('cirkles');
 			
 			cirklescollection.insert(cirkleObj);
-			
 
 			callback(null);
 			
