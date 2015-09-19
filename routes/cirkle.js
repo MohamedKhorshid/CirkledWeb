@@ -62,15 +62,25 @@ module.exports = function (router) {
 
 	router.route('/cirkles').post(function(req, res) {
 
-		var cirkleName = req.body.cirkleName;
+		var cirkleObj = {};
+		cirkleObj.name = req.body.cirkleName;
+		cirkleObj.admin = req.user._id;
+		var membersArr = req.body.members;
+
+		cirkleObj.members = [];
+		
+		for(var i in membersArr) {
+			cirkleObj.members.push({'$oid': membersArr[i]});
+		}
+		
 
 		var validateCirkle = function(callback) {
 			console.log('validate parameters...');
 
-			var cirkleObj = {};
-			cirkleObj.name = cirkleName;
-
-			var check = validator.isObject().withRequired('name');
+			var memberValidator = validator.isObject().withRequired('$oid');
+			var check = validator.isObject().withRequired('name')
+			.withRequired('admin')
+			.withOptional('members', validator.isArray(memberValidator));
 
 			validator.run(check, cirkleObj, function(errorCount, errors) {
 				if(errorCount > 0) {
@@ -82,16 +92,12 @@ module.exports = function (router) {
 		};
 
 		var postCirkle = function(callback) {
-			console.log('persisting cirkle ' + cirkleName);
-			
-			var cirkleObj = {};
-			cirkleObj.name = cirkleName;
-			cirkleObj.admin = req.user._id;
-			cirkleObj.members = req.body.members;
+			console.log('persisting cirkle ' + cirkleObj.name);
 			
 			var cirklescollection = req.db.get('cirkles');
 			
 			cirklescollection.insert(cirkleObj);
+			
 
 			callback(null);
 			
