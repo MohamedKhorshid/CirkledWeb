@@ -5,8 +5,11 @@ module.exports = function (router) {
 
 	router.route('/cirkles/:cirkleId').get(function(req, res) {
 		var cirklescollection = req.db.get('cirkles');
-			
-		cirklescollection.find({'cirkleId' : req.query.cirkleId}, {}, function(e,docs){
+
+		console.log(req.params.cirkleId);
+
+		cirklescollection.find({'_id' : req.params.cirkleId}, {}, function(e,docs){
+			console.log(docs);
 			if(e) {
 				res.status(500).end();
 			} else if (docs.length == 0) {

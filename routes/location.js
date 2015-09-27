@@ -56,21 +56,14 @@ module.exports = function (router) {
 				}
 				
 			}, function(e,docs){
-				console.log(e);
-				console.log(JSON.stringify(docs));
 				var results = [];
-				console.log(docs[0].users);
 				for(var doc in docs[0].users) {
-					console.log(doc);
 					results.push(docs[0].users[doc]);
 				}
 
 				callback(null, JSON.stringify(results));
 			});
 			
-			/*locationscollection.find({'user' : { "$in" : cirkle.members}}, {}, function(e,docs){
-				callback(null, JSON.stringify(docs));
-			});*/
 		};
 
 		var handleError = function(error, result) {
