@@ -47,10 +47,30 @@ module.exports = function (router) {
 			console.log('found cirkle: \'' + cirkle.name + "\', members: " + cirkle.members);
 			
 			var locationscollection = req.db.get('locations');
-			
-			locationscollection.find({'user' : { "$in" : cirkle.members}}, {}, function(e,docs){
-				callback(null, JSON.stringify(docs));
+
+			locationscollection.col.group({}, {'user' : { "$in" : cirkle.members}}, {users: {}}, function (obj, prev) {
+				if(prev.users[obj.user] == null) {
+					prev.users[obj.user] = obj;
+				} else if(obj.timestamp > prev.users[obj.user].timestamp) {
+					prev.users[obj.user] = obj;
+				}
+				
+			}, function(e,docs){
+				console.log(e);
+				console.log(JSON.stringify(docs));
+				var results = [];
+				console.log(docs[0].users);
+				for(var doc in docs[0].users) {
+					console.log(doc);
+					results.push(docs[0].users[doc]);
+				}
+
+				callback(null, JSON.stringify(results));
 			});
+			
+			/*locationscollection.find({'user' : { "$in" : cirkle.members}}, {}, function(e,docs){
+				callback(null, JSON.stringify(docs));
+			});*/
 		};
 
 		var handleError = function(error, result) {
