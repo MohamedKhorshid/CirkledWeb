@@ -12,9 +12,8 @@
 		"express": "~4.9.x",
 		"moment": "~2.4.0",
 		"async": "*",
-		"mongodb": "1.4.4",
-		"monk": "~1.0.1",
-		"websocket": "1.0.21"
+		"mongodb": "1.4.29",
+		"monk": "~1.0.1"
 	},
 	"repository": {
 		"type": "git",

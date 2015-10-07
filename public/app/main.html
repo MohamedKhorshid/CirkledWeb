@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js'></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js'></script>
+		<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-cookies.js'></script>
+		<script src='js/jquery/jquery-2.1.3.js'></script>
+		<script src='js/bootstrap/ui-bootstrap.js'></script>
+		<script src='js/bootstrap/ui-bootstrap-tpls-0.12.1.js'></script>
+		<script src='app/service/authentication.js'></script>
+		<script src='app/main.js'></script>
+		<script src='app/registration/registration.js'></script>
+		<script src='app/login/login.js'></script>
+		<script src='app/cirkle/cirkle.js'></script>
+		<link rel="stylesheet" type="text/css" href='css/bootstrap.css' />
+		<link rel="stylesheet" type="text/css" href='css/bootstrap-custom.css' />
+		<link rel="stylesheet" type="text/css" href='css/app.css' />
+	</head>
+	<body>
+		<div ng-app='mainApp'>
+			<div class="cl-container">
+				<div class="navbar navbar-fixed-top" ng-controller="HomeController" ng-init="verifyLogin()">
+					<div class="navbar-inner">
+					    <a class="navbar-brand" href="/#/">Cirkle</a>
+					    <div class="container-fluid">
+						    <ul class="nav navbar-nav navbar-right">
+						    	<li ng-show='isRegistered'><a href="javascipt:void(0)">{{displayname}}</a></li>
+						    	<li ng-hide='isRegistered'><a href="/#/login">Login</a></li>
+						    	<li ng-hide='isRegistered'><a href="/#/register">register</a></li>
+						    </ul>
+						</div>
+					</div>
+				</div>
+				<div class="cl-content">
+					<div ng-view></div>
+				</div>
+				<footer class="footer">
+			    	<strong>Cirkle</strong> v1.0.0 © Copyright 2015
+			    </footer>
+			</div>
+		</div>
+	</body>
+</html>

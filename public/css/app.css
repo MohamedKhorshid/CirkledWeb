@@ -1,0 +1,111 @@
+/*global*/
+body {
+    background-color: #F6F6F6;
+}
+
+h4 {
+	font-size: 20px;
+}
+
+h3 {
+	font-size: 15px;
+}
+
+/*navigation*/
+.nav-logo {
+    width: 44px;
+}
+
+/*content*/
+.cl-container {
+	height: 100%;
+	padding-top: 50px;
+	padding-bottom: 45px;
+}
+
+/*footer*/
+footer {
+	box-shadow: 0 -3px 5px -3px rgba(0, 0, 0, 0.15);
+	position: fixed;
+	bottom: 0;
+    left: 0;
+    right: 0;
+	text-align: center;
+    color: #888;
+    font-weight: 500;
+    background: #fff;
+    height: 45px;
+    line-height: 45px;
+    display: block;
+}
+
+
+/* login/registration forms*/
+.form-center {
+	width: 100%;
+	padding-top: 80px;
+}
+
+.form-center .form {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.form-center .form .form-control {
+	padding: 25px 20px;
+	border-radius: 0px;
+}
+
+.form-center .form input.form-control:first-of-type {
+	border-top-right-radius:4px;
+	border-top-left-radius:4px;
+}
+
+.form-center .form input.form-control:last-of-type {
+	border-bottom-right-radius:4px;
+	border-bottom-left-radius:4px;
+}
+
+.form-center .form button {
+	margin-top: 10px;
+}
+
+/*sidebar*/
+.sidebar {
+	width: 200px;
+	position: absolute;
+	background-color: #212121;
+    top: 50;
+    bottom: 45px;
+    overflow-y: scroll;
+}
+
+.sidebar .sidebar-block {
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-bottom: 16px;
+	border-bottom: #2e2e2e 1px solid;
+}
+
+.sidebar .sidebar-block .sidebar-cirkle {
+	padding-top: 20px;
+	text-align: center;
+}
+
+.sidebar .sidebar-block .sidebar-cirkle img {
+	width: 100px;
+	height: 100px;
+	vertical-align: middle;
+	border-radius: 50%;
+}
+
+.sidebar .sidebar-block {
+	color: #FFF;
+}
+
+/*inner content*/
+.cl-inner-content {
+	padding-left: 200px;
+	padding-top: 50px;
+	padding-bottom: 45px;
+}

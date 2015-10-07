@@ -82,7 +82,7 @@ module.exports = function (router) {
 
 		var fetchMembers = function(callback) {
 
-			if(x >= membersArr.length) {
+			if(!membersArr || x >= membersArr.length) {
 				callback(null);
 				return;
 			}
@@ -131,9 +131,9 @@ module.exports = function (router) {
 			
 			var cirklescollection = req.db.get('cirkles');
 			
-			cirklescollection.insert(cirkleObj);
+			var savedCirkle = cirklescollection.insert(cirkleObj);
 
-			callback(null);
+			callback(null, savedCirkle.query);
 			
 		};
 
@@ -142,7 +142,7 @@ module.exports = function (router) {
 			  res.status(error.status);
 			  res.send(error.body);
 			} else {
-				res.status(200).end();
+				res.send(result);
 			}
 		};
 

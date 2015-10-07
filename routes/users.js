@@ -13,9 +13,10 @@ module.exports = function (router) {
 		var userscollection = req.db.get('users');
 			
 		userscollection.find({'email' : email, 'password' : password},{},function(e,docs){
+			console.log(docs);
 			if(docs.length > 0) {
 				res.status(200);
-				res.end();
+				res.send(docs[0]);
 			} else {
 				res.status(400).end();
 			}

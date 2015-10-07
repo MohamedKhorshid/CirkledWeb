@@ -1,0 +1,11 @@
+<div class="form-center">
+	<div class="form">
+		<h2>Registration</h2>
+		<input type='text' class="form-control" placeholder="Display Name" ng-model="newUser.displayName" />
+		<input type='email' class="form-control required" placeholder="Email" ng-model="newUser.email" />
+		<input type='password' class="form-control required" placeholder="Password" ng-model="newUser.password" />
+		<input type='password' class="form-control required" placeholder="Confirm Password" ng-model="newUser.password2" />
+		<button class="btn btn-lg btn-primary btn-block" ng-click='registerUser()'>Register</button>
+		<button class="btn btn-lg btn-accent btn-block" ng-click='login()'>Already a User</button>
+	</div>
+</div>

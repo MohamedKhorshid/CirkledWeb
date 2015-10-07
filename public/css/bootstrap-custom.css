@@ -1,0 +1,59 @@
+/*primary color*/
+.btn-primary, .btn-primary:active, .btn-primary:focus, .navbar {
+	background-color : #af86b9;
+}
+/*primary color hover*/
+.nav > li > a:focus, .nav > li > a:hover, .btn-primary:hover {
+	background-color : #a679b2;
+}
+/*primary color border*/
+.btn-primary {
+	border-color: #a679b2;
+}
+
+/*accent color*/
+.btn-accent:hover {
+	background-color : #A78012;
+}
+
+/*accent color*/
+.btn-accent {
+	background-color : #E4AA07;
+}
+
+/*accent color border*/
+.btn-accent {
+	border-color: #A47A17;
+}
+
+/*btn accent*/
+.btn-accent, .btn-accent:hover {
+	color: #FFF;
+}
+
+/*navbar*/
+.navbar .navbar-brand {
+	color: #FFF;
+	border-right-color: #C79ECA;
+	border-right-style: solid;
+	border-right-width: 1px;
+	width: 200px;
+	font-size: 16.445px;
+	font-weight: bold;
+}
+
+.nav > li > a {
+	color: #FFF;
+	font-weight: bold;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    color: #5D4258;
+}
+
+/*anchor*/
+a, a:hover, a:focus {
+    color: #FFF;
+    text-decoration: none;
+    cursor: pointer;
+}
