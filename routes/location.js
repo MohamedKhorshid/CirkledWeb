@@ -57,10 +57,12 @@ module.exports = function (router) {
 				
 			}, function(e,docs){
 				var results = [];
-				for(var doc in docs[0].users) {
-					results.push(docs[0].users[doc]);
+				if(docs[0]) {
+					for(var doc in docs[0].users) {
+						results.push(docs[0].users[doc]);
+					}
 				}
-
+				
 				callback(null, JSON.stringify(results));
 			});
 			

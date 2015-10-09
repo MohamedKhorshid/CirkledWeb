@@ -9,7 +9,6 @@ module.exports = function (router) {
 		console.log(req.params.cirkleId);
 
 		cirklescollection.find({'_id' : req.params.cirkleId}, {}, function(e,docs){
-			console.log(docs);
 			if(e) {
 				res.status(500).end();
 			} else if (docs.length == 0) {
@@ -44,7 +43,6 @@ module.exports = function (router) {
 			var cirklescollection = req.db.get('cirkles');
 			
 			cirklescollection.find({'admin' : req.user._id}, {}, function(e,docs){
-				console.log('found cirkles' + JSON.stringify(docs));
 				callback(null, JSON.stringify(docs));
 			});
 		};
@@ -75,8 +73,6 @@ module.exports = function (router) {
 
 		cirkleObj.members = [];
 		
-		var tasks = [];
-
 		var userscollection = req.db.get('users');
 		var x = 0;
 
@@ -145,12 +141,202 @@ module.exports = function (router) {
 				res.send(result);
 			}
 		};
+		async.waterfall([fetchMembers, validateCirkle, postCirkle], handleError);
+	});
 
-		tasks.push(fetchMembers);
-		tasks.push(validateCirkle);
-		tasks.push(postCirkle);
+	router.route('/cirkles/:cirkleId/members').get(function(req, res) {
+
+		var cirkleId = req.params.cirkleId;
 		
-		async.waterfall(tasks, handleError);
+		var validate = function(callback) {
+			console.log('validating request');
+
+			var cirkleObj = {};
+			cirkleObj.cirkleId = cirkleId;
+
+			var check = validator.isObject().withRequired('cirkleId');
+
+			validator.run(check, cirkleObj, function(errorCount, errors) {
+				if(errorCount > 0) {
+					callback({status: 400, body: {message:'INVALID_REQUEST'}});
+				} else {
+					callback(null);
+				}
+			});
+		};
+
+		var getCirkles = function(callback) {
+
+			console.log('loading cirkle for members');
+
+			var cirklescollection = req.db.get('cirkles');
+			
+			cirklescollection.find({'_id' : cirkleId}, {}, function(e,cirkles){
+				callback(null, cirkles);
+			});
+		};
+
+		var getMembers = function(cirkles, callback) {
+
+			if(cirkles.length == 0) {
+				callback({status: 404, body: {message:'INVLID_CIRKLE'}});
+				return;
+			}
+
+			var cirkle = cirkles[0];
+
+			console.log('found cirkle: \'' + cirkle.name + "\', members: " + cirkle.members);
+			
+			var userscollection = req.db.get('users');
+
+			userscollection.find({'_id' : { "$in" : cirkle.members}}, {}, function(e,data){
+				console.log(data);
+				callback(null, data);
+			});
+			
+		};
+
+		var cropUserDetails = function (members, callback) {
+
+			var _members = [];
+
+			if(!members) {
+				callback(null, []);
+			}
+
+			var display;
+			for(var m in members) {
+				if(members[m].displayname) {
+					display = members[m].displayname;
+				} else {
+					display = members[m].email;
+				}
+				_members.push({'_id' : members[m]._id, 'displayname' : display});
+			}
+
+			callback(null, _members);
+
+		};
+
+		var handleError = function(error, result) {
+			if(error) {
+			  res.status(error.status);
+			  res.send(error.body);
+			} else {
+				res.status(200);
+				res.send(result);
+			}
+		};
+
+		async.waterfall([validate, getCirkles, getMembers, cropUserDetails], handleError);
+	});
+
+	router.route('/cirkles/:cirkleId/members').post(function(req, res) {
+
+		var cirkleId = req.params.cirkleId;
+		var members = req.body;
+		var _members = [];
+
+		var userscollection = req.db.get('users');
+		var x = 0;
+		
+		if(!members) {
+			callback({status: 400, body: {message:'INVALID_REQUEST'}});
+		}
+
+		var validate = function(callback) {
+			console.log('validating request');
+
+			var cirkleObj = {};
+			cirkleObj.cirkleId = cirkleId;
+
+			var check = validator.isObject().withRequired('cirkleId');
+
+			validator.run(check, cirkleObj, function(errorCount, errors) {
+				if(errorCount > 0) {
+					callback({status: 400, body: {message:'INVALID_REQUEST'}});
+				} else {
+					callback(null);
+				}
+			});
+		};
+
+		var getCirkles = function(callback) {
+
+			console.log('loading cirkle for members');
+
+			var cirklescollection = req.db.get('cirkles');
+			
+			cirklescollection.find({'_id' : cirkleId}, {}, function(e,cirkles){
+				callback(null, cirkles);
+			});
+		};
+
+		var fetchMembers = function(callback) {
+
+			if(!members || x >= members.length) {
+				callback(null);
+				return;
+			}
+
+			var memberId = members[x];
+			userscollection.find({'_id' : memberId}, {}, function(e,docs){
+				console.log('fetch member ' + memberId + ' results: ' + JSON.stringify(docs));
+				if(e) {
+					callback({status: 500});
+				} else if (docs.length == 0) {
+					callback({status: 404});
+				} else if (docs.length > 1) {
+					res.status(400).end();
+					callback({status: 400, body: {message:'INVALID_REQUEST'}});
+				} else {
+					_members.push(docs[0]._id);
+					x++;
+					fetchMembers(callback);
+
+				}
+				
+			});
+		};
+
+		var addMembers = function(cirkles, callback) {
+
+			if(cirkles.length == 0) {
+				callback({status: 404, body: {message:'INVLID_CIRKLE'}});
+				return;
+			}
+
+			var cirkle = cirkles[0];
+
+			console.log('found cirkle: \'' + cirkle.name + "\', members: " + cirkle.members);
+
+			if(!cirkle.members) {
+				cirkle.members = [];
+			}
+			
+			for(var m in _members) {
+				cirkle.members.push(_members[m]);
+			}
+
+			var cirklescollection = req.db.get('cirkles');
+
+			cirklescollection.update(cirkleId, {$set: { "members": cirkle.members }}, {}, function () {
+				callback(null);
+			});
+
+		};
+
+		var handleError = function(error, result) {
+			if(error) {
+			  res.status(error.status);
+			  res.send(error.body);
+			} else {
+				res.status(200);
+				res.send(result);
+			}
+		};
+
+		async.waterfall([validate, fetchMembers, getCirkles, addMembers], handleError);
 	});
 
 }

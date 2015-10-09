@@ -22,13 +22,35 @@ module.exports = function (router) {
 		};
 
 		var searchUser = function(searchText, callback) {
-			var userSearch = eval('/' + searchText + '/');
+			var userSearch = eval('/' + searchText + '/i');
 			
 			var userscollection = req.db.get('users');
 			
-			userscollection.find({'displayname' : userSearch},{},function(e,docs){
-				callback(null, JSON.stringify(docs));
+			userscollection.find({$or: [{'displayname' : userSearch}, {'email' : searchText}]}, function(e,docs){
+				callback(null, docs);
 			});
+		};
+
+		var cropUserDetails = function (members, callback) {
+
+			var _members = [];
+
+			if(!members) {
+				callback(null, []);
+			}
+
+			var display;
+			for(var m in members) {
+				if(members[m].displayname) {
+					display = members[m].displayname;
+				} else {
+					display = members[m].email;
+				}
+				_members.push({'_id' : members[m]._id, 'displayname' : display});
+			}
+
+			callback(null, _members);
+
 		};
 
 		var handleResults = function(error, result) {
@@ -41,7 +63,7 @@ module.exports = function (router) {
 			}
 		};
 
-		async.waterfall([validateRequest, searchUser], handleResults);
+		async.waterfall([validateRequest, searchUser, cropUserDetails], handleResults);
 	});
 
 }

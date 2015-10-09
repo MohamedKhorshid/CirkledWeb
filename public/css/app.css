@@ -44,6 +44,7 @@ footer {
 .form-center {
 	width: 100%;
 	padding-top: 80px;
+    padding-bottom: 80px;
 }
 
 .form-center .form {
@@ -81,26 +82,29 @@ footer {
 }
 
 .sidebar .sidebar-block {
-	padding-left: 16px;
-	padding-right: 16px;
+	padding-left: 5px;
+	padding-right: 5px;
 	padding-bottom: 16px;
 	border-bottom: #2e2e2e 1px solid;
+	color: #FFF;
 }
 
-.sidebar .sidebar-block .sidebar-cirkle {
+.sidebar .sidebar-block .sidebar-item {
 	padding-top: 20px;
 	text-align: center;
 }
 
-.sidebar .sidebar-block .sidebar-cirkle img {
+.sidebar .sidebar-block .sidebar-item img {
 	width: 100px;
 	height: 100px;
 	vertical-align: middle;
 	border-radius: 50%;
+    border: 3px solid #af86b9;
 }
 
-.sidebar .sidebar-block {
-	color: #FFF;
+.sidebar .sidebar-block .sidebar-ac {
+	margin-top: 8px;
+	color: #000;
 }
 
 /*inner content*/

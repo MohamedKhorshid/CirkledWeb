@@ -3,9 +3,9 @@
 		<a ng-click="newCirkle()"><h3>New Cirkle</h3></a>
 	</div>
 	<div class="sidebar-block">
-		<div class="sidebar-cirkle" ng-repeat="cirkle in 	cirkles">
-			<a href='/cirkle/{{cirkle.id}}'><img class="cirkle-icon" ng-src="{{cirkle.src}}" /></a>
-			<a href='/cirkle/{{cirkle.id}}'><h4>{{cirkle.name}}</h4></a>
+		<div class="sidebar-item" ng-repeat="cirkle in 	cirkles">
+			<a ng-click="openCirkle(cirkle.id)"><img class="cirkle-icon" ng-src="{{cirkle.ico}}" /></a>
+			<a ng-click="openCirkle(cirkle.id)"><h4>{{cirkle.name}}</h4></a>
 		</div>
 	</div>
 </div>
