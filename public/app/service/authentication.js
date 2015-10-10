@@ -4,7 +4,7 @@ angular.module('Authentication', [])
     function (Base64, $http, $cookieStore, $rootScope, $timeout) {
         var service = {};
  
-        service.Login = function (email, password, callback) {
+        service.login = function (email, password, callback) {
 
             $http.post('/api/v1/public/login', 
             {
@@ -21,7 +21,7 @@ angular.module('Authentication', [])
  
         };
   
-        service.SetCredentials = function (email, password, displayname) {
+        service.setCredentials = function (email, password, displayname) {
             var authdata = Base64.encode(email + ':' + password);
   
             $rootScope.globals = {
@@ -36,7 +36,7 @@ angular.module('Authentication', [])
             $cookieStore.put('globals', $rootScope.globals);
         };
   
-        service.ClearCredentials = function () {
+        service.clearCredentials = function () {
             $rootScope.globals = {};
             $cookieStore.remove('globals');
             $http.defaults.headers.common.Authorization = 'Basic ';

@@ -138,7 +138,7 @@ module.exports = function (router) {
 			  res.status(error.status);
 			  res.send(error.body);
 			} else {
-				res.send(result);
+				res.send({'name' : result.name, '_id' : result._id});
 			}
 		};
 		async.waterfall([fetchMembers, validateCirkle, postCirkle], handleError);

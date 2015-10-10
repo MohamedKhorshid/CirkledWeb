@@ -8,10 +8,12 @@
 		<script src='js/bootstrap/ui-bootstrap.js'></script>
 		<script src='js/bootstrap/ui-bootstrap-tpls-0.12.1.js'></script>
 		<script src='app/service/authentication.js'></script>
+		<script src='app/service/location.js'></script>
 		<script src='app/main.js'></script>
 		<script src='app/registration/registration.js'></script>
 		<script src='app/login/login.js'></script>
 		<script src='app/cirkle/cirkle.js'></script>
+		<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAc_aId4XQMHZswo8NLkxsqGKOkst3aAc8'></script>
 		<link rel="stylesheet" type="text/css" href='css/bootstrap.css' />
 		<link rel="stylesheet" type="text/css" href='css/bootstrap-custom.css' />
 		<link rel="stylesheet" type="text/css" href='css/app.css' />
@@ -34,9 +36,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="cl-content">
-					<div ng-view></div>
-				</div>
+				<div ng-view></div>
 				<footer class="footer">
 			    	<strong>Cirkle</strong> v1.0.0 © Copyright 2015
 			    </footer>

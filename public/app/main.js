@@ -1,4 +1,4 @@
-var app = angular.module('mainApp', ['ngRoute', 'ngCookies', 'Authentication', 'ui.bootstrap']);
+var app = angular.module('mainApp', ['ngRoute', 'ngCookies', 'ui.bootstrap', 'Authentication', 'Location']);
 
 // config
 app.config(function ($routeProvider) {
@@ -21,8 +21,8 @@ app.config(function ($routeProvider) {
 	.otherwise({ redirectTo: '/' });
 });
 
-app.run(['$rootScope', '$location', '$cookieStore', '$http',
-    function ($rootScope, $location, $cookieStore, $http) {
+app.run(['$rootScope', '$location', '$cookieStore', '$http', 'LocationService',
+    function ($rootScope, $location, $cookieStore, $http, LocationService) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {

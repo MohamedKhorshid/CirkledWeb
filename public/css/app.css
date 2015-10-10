@@ -5,6 +5,8 @@ body {
 
 h4 {
 	font-size: 20px;
+	text-overflow: ellipsis;
+    overflow-x: hidden;
 }
 
 h3 {
@@ -99,7 +101,7 @@ footer {
 	height: 100px;
 	vertical-align: middle;
 	border-radius: 50%;
-    border: 3px solid #af86b9;
+    border: 2px solid #af86b9;
 }
 
 .sidebar .sidebar-block .sidebar-ac {
@@ -107,9 +109,12 @@ footer {
 	color: #000;
 }
 
-/*inner content*/
-.cl-inner-content {
-	padding-left: 200px;
-	padding-top: 50px;
-	padding-bottom: 45px;
+/*content*/
+.cl-content {
+	height: 100%;
+	margin-left: 200px;
+}
+
+.cl-content #cl-map {
+	height: 100%;
 }

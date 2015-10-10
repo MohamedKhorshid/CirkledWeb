@@ -7,8 +7,8 @@ app.controller('CirklesController', function($scope, $http, $modal, $location) {
 			controller: 'NewCirkleController'
 		});
 
-		modalInstance.result.then(function (cirkleName) {
-			$scope.cirkles.push({'name': cirkleName, 'ico' : defaultImgSrc});
+		modalInstance.result.then(function (cirkle) {
+			$scope.cirkles.push({'name': cirkle.name, 'ico' : defaultImgSrc, 'id': cirkle._id});
 		});
 	}
 
@@ -32,18 +32,140 @@ app.controller('CirklesController', function($scope, $http, $modal, $location) {
 		$http.post('/api/v1/cirkles', {
 			'cirkleName': $scope.cirkle.name
 		}).success(function(data) {
-			$modalInstance.close($scope.cirkle.name);
+			$modalInstance.close(data);
 		});
 		
 	}
-}).controller('CirkleController', function($scope, $http, $rootScope) {
-	$scope.cirkle = {};
-}).controller('MembersController', function($scope, $http, $routeParams) {
-	$scope.members = [];
-
+}).controller('CirkleController', function($scope, $http, $routeParams, LocationService) {
 	var cirkleId = $routeParams.cirkleId;
-
 	var defaultImgSrc = 'img/user-preview.jpg';
+
+	$scope.locations = {};
+	$scope.mapLocations = {};
+	$scope.members = {};
+
+	$scope.init = function() {
+
+		$scope.initLocations();
+
+		LocationService.getLocation().then(function(location) {
+			console.log('location:success:' + location);
+			$scope.myLocation = location;
+			processMyLocation(location);
+		}, function (error) {
+			console.log('location:fail:' + error);
+		});
+
+		$scope.map = new google.maps.Map(document.getElementById('cl-map'), {
+			center: $scope.myLocation || {lat: 0, lng: 0},
+			zoom: 16
+		});
+		
+		processMyLocation($scope.myLocation);
+
+		recalculateMapBounds();
+
+	}
+
+	$scope.initMembers = function () {
+		$http.get('/api/v1/cirkles/' + cirkleId + '/members').success(function (data) {
+			$scope.members = {};
+			for(var x in data) {
+				var member = data[x];
+				$scope.members[member._id] = {'name' : member.displayname, 'ico': defaultImgSrc};
+			}
+		});
+	}
+
+	$scope.initLocations = function () {
+		$http.get('/api/v1/locations/cirkle/' + cirkleId).success(function (locations) {
+			$scope.locations = {};
+			for(var l in locations) {
+				var location = locations[l];
+				$scope.locations[location.user] = location;
+			}
+			fixLocations();
+		});
+	}
+
+	$scope.selectMember = function (memberId) {
+		if(!$scope.map) {
+			console.error('could not find map');
+			return;
+		}
+
+		if(!$scope.mapLocations[memberId]) {
+			console.log('could not find member location');
+			return;
+		}
+
+		$scope.map.panTo($scope.mapLocations[memberId].position);
+
+	}
+
+	var fixLocations = function () {
+		if($scope.mapLocations) {
+			$scope.clearMarkers();
+		}
+
+		$scope.mapLocations = {};
+
+		for(var l in $scope.locations) {
+			var location = $scope.locations[l];
+
+			var position = {lat: Number(location.latitude), lng: Number(location.longitude)};
+
+			var marker = new google.maps.Marker({
+				position: position,
+				map: $scope.map
+			});
+
+			$scope.mapLocations[l] = {'position': position, 'marker': marker}
+		}
+
+		recalculateMapBounds();
+	}
+
+	var processMyLocation = function () {
+
+		if(!$scope.myLocation || !$scope.map) {
+			return;
+		}
+
+		$scope.myMarker = new google.maps.Marker({
+			position: $scope.myLocation,
+			map: $scope.map
+		});
+
+		recalculateMapBounds();
+
+	}
+
+	$scope.clearMarkers = function () {
+		for(var l in $scope.mapLocations) {
+			var location = $scope.mapLocations[l];
+			location.marker.setMap(null);
+		}
+	}
+
+	var recalculateMapBounds = function () {
+		
+		var bounds = new google.maps.LatLngBounds();
+
+		if ($scope.mapLocations) {
+			for (var l in $scope.mapLocations) {
+				var position = $scope.mapLocations[l].position;
+				bounds.extend(new google.maps.LatLng(position.lat, position.lng));
+			}
+		}
+
+		if($scope.myLocation) {
+			bounds.extend(new google.maps.LatLng($scope.myLocation.lat, $scope.myLocation.lng));
+		}
+
+		$scope.map.fitBounds(bounds);
+		
+	};
 
 	$('#add_member').autocomplete({source: function (request, response) {
 		if(!request.term) {
@@ -54,7 +176,6 @@ app.controller('CirklesController', function($scope, $http, $modal, $location) {
 			if(!data) {
 				return;
 			}
-			console.log(data);
 			for(var m in data) {
 				members_ac.push({label: data[m].displayname, obj : data[m]});
 			}
@@ -62,27 +183,16 @@ app.controller('CirklesController', function($scope, $http, $modal, $location) {
 		});
 
 	}, select: function (event, object) {
-		console.log(object);
-		
 		if(!object.item.obj || !object.item.obj._id) {
 			return;
 		}
 		
 		$http.post('/api/v1/cirkles/' + cirkleId + '/members', [object.item.obj._id]).success(function () {
+			$scope.clearMarkers();
+			$scope.initLocations();
 			$scope.initMembers();
 		});
-
 		$('#add_member').val('');
 	}});
-
-	$scope.initMembers = function () {
-		$http.get('/api/v1/cirkles/' + cirkleId + '/members').success(function (data) {
-			$scope.members = [];
-			for(var x in data) {
-				var member = data[x];
-				$scope.members.push({'name' : member.displayname, 'ico': defaultImgSrc});;
-			}
-		});
-	}
 
 });

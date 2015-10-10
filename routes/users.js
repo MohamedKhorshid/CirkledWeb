@@ -69,7 +69,7 @@ module.exports = function (router) {
 			userObj.password = password;
 			userObj.displayname = displayname;
 			
-			console.log('persisting ' + userObj);
+			console.log('persisting ' + JSON.stringify(userObj));
 			
 			var userscollection = req.db.get('users');
 			
