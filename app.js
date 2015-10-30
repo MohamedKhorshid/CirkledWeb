@@ -8,8 +8,8 @@ var server = require('./config/server');
 var auth = require('./lib/auth');
 var mongo = require('./lib/db');
 
-var http_host = (process.env.VCAP_APP_HOST || '0.0.0.0');
-var http_port = (process.env.VCAP_APP_PORT || 8000);
+var http_host = (process.env.HOST || '0.0.0.0');
+var http_port = (process.env.PORT || 8000);
 
 app.set('port', http_port);
 app.set('host',http_host);
