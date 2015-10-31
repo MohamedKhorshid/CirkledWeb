@@ -4,7 +4,6 @@ var app = express();
 var router = express.Router();
 var bodyParser = require('body-parser');
 
-var server = require('./config/server');
 var auth = require('./lib/auth');
 var mongo = require('./lib/db');
 

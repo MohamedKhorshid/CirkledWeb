@@ -1,2 +1,4 @@
 # all node_modules files
 node_modules/*
+
+config/database.js
