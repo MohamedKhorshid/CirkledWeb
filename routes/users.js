@@ -2,36 +2,46 @@ module.exports = function (router) {
 	var validator = require('../lib/node-validator');
 	var cirkleValidator = require('../lib/cirkle-validator');
 	var async = require('async');
+	var passwordHash = require('password-hash');
 	
 	router.route('/public/login').post(function(req, res) {
 		
 		var email = req.body.email;
 		var password = req.body.password;
-
-		console.log(email + '-' + password)
 		
 		var userscollection = req.db.get('users');
 			
-		userscollection.find({'email' : email, 'password' : password},{},function(e,docs){
-			if(e) {
-				res.status(500).end();
-				console.log(e);
-			} else if(docs.length > 0) {
-				res.status(200);
-				res.send(docs[0]);
+		async.waterfall([
+			function(callback) {
+			userscollection.find({'email' : email},{},function(e,docs){
+				if(e) {
+					console.log(e);
+					callback({status: 500});
+				} else if(docs.length == 0) {
+					callback({status: 404});
+				} else {
+					callback(null, docs[0]);
+				}
+			});
+		}, function (user, callback) {
+			if(passwordHash.verify(password, user.password)) {
+				callback(null, user);
 			} else {
-				res.status(400).end();
+				callback({status: 401});
+			} 
+		}], function (error, result) {
+			if(error) {
+			  res.status(error.status);
+			  res.send(error.body);
+			} else {
+				res.send(result);
 			}
 		});
 		
 	});
 
 	router.route('/public/register').post(function(req, res) {
-
-		var email = req.body.email;
-		var password = req.body.password;
-		var displayname = req.body.displayname;
-
+		
 		async.waterfall([function(callback){
 			console.log('validate parameters...');
 
@@ -40,8 +50,8 @@ module.exports = function (router) {
 			.withRequired('password');
 			
 			var userObj = {};
-			userObj.email = email;
-			userObj.password = password;
+			userObj.email = req.body.email;
+			userObj.password = req.body.password;
 
 			validator.run(check, userObj, function(errorCount, errors) {
 
@@ -56,7 +66,7 @@ module.exports = function (router) {
 
 			var userscollection = req.db.get('users');
 			
-			userscollection.find({'email' : email},{},function(e,docs){
+			userscollection.find({'email' : req.body.email},{},function(e,docs){
 				if(docs.length > 0) {
 					callback({status: 400, body: {message: 'USER_EXISTS'}});
 				} else {
@@ -67,10 +77,10 @@ module.exports = function (router) {
 		}, function(callback) {
 			
 			var userObj = {};
-			userObj.email = email;
-			userObj.password = password;
-			userObj.displayname = displayname;
-			
+			userObj.email = req.body.email;
+			userObj.password = passwordHash.generate(req.body.password);
+			userObj.displayname = req.body.displayname;
+
 			console.log('persisting ' + JSON.stringify(userObj));
 			
 			var userscollection = req.db.get('users');

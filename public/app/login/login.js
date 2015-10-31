@@ -5,7 +5,7 @@ app.controller('LoginController', function($scope, $location, $http, Authenticat
 		AuthenticationService.clearCredentials();
 		AuthenticationService.login($scope.login.email, $scope.login.password, function(data, status) {
             if(!status) {
-                AuthenticationService.setCredentials($scope.login.email, $scope.login.password, data.displayname);
+                AuthenticationService.setCredentials(data.email, data.password, data.displayname);
                 $location.path('/');
             } else {
                 alert('Invlid Login');
