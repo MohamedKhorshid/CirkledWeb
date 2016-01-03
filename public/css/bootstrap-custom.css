@@ -13,7 +13,7 @@
 
 /*accent color*/
 .btn-accent:hover {
-	background-color : #A78012;
+	background-color : #CCA73D;
 }
 
 /*accent color*/
@@ -29,6 +29,11 @@
 /*btn accent*/
 .btn-accent, .btn-accent:hover {
 	color: #FFF;
+}
+
+.btn-fb, .btn-fb:hover, .btn-fb:focus {
+	color: white;
+	background-color: #3B5998;
 }
 
 /*navbar*/

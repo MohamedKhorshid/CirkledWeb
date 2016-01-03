@@ -13,6 +13,7 @@
 		<script src='app/registration/registration.js'></script>
 		<script src='app/login/login.js'></script>
 		<script src='app/cirkle/cirkle.js'></script>
+		<script src='//connect.facebook.net/en_US/sdk.js'></script>
 		<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAc_aId4XQMHZswo8NLkxsqGKOkst3aAc8'></script>
 		<link rel="stylesheet" type="text/css" href='css/bootstrap.css' />
 		<link rel="stylesheet" type="text/css" href='css/bootstrap-custom.css' />
@@ -26,7 +27,7 @@
 			<div class="cl-container">
 				<div class="navbar navbar-fixed-top" ng-controller="HomeController" ng-init="verifyLogin()">
 					<div class="navbar-inner">
-					    <a class="navbar-brand" href="/#/">Cirkle</a>
+					    <a class="navbar-brand" href="/#/">Cirkled</a>
 					    <div class="container-fluid">
 						    <ul class="nav navbar-nav navbar-right">
 						    	<li ng-show='isRegistered'><a href="javascipt:void(0)">{{displayname}}</a></li>
@@ -38,7 +39,7 @@
 				</div>
 				<div ng-view></div>
 				<footer class="footer">
-			    	<strong>Cirkle</strong> v1.0.0 © Copyright 2015
+			    	<strong>Cirkled</strong> v1.0.0 © Copyright 2015
 			    </footer>
 			</div>
 		</div>
