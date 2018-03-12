@@ -10,7 +10,6 @@
 		"body-parser": "*",
 		"pg": "4.x",
 		"express": "~4.9.x",
-		"moment": "~2.4.0",
 		"async": "*",
 		"mongodb": "1.4.29",
 		"monk": "~1.0.1",
